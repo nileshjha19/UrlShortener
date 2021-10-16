@@ -1,4 +1,4 @@
-package com.employee.springbootbackend.exceptio;
+package com.employee.springbootbackend.exception;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ResponseStatus;

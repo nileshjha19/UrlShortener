@@ -1,13 +1,12 @@
 package com.employee.springbootbackend.controller;
 
-import com.employee.springbootbackend.exceptio.ResourceNotFoundException;
+import com.employee.springbootbackend.exception.ResourceNotFoundException;
 import com.employee.springbootbackend.model.Employee;
 import com.employee.springbootbackend.repository.EmployeeRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import javax.swing.text.StyledEditorKit;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
