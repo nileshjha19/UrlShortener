@@ -49,7 +49,6 @@ public class UrlMappingService {
 
         if(urlMapping.isPresent()) {
             if(urlMapping.get().getExpiryTime() != null && urlMapping.get().getExpiryTime().before(new Date())) {
-                urlRepository.delete(urlMapping.get());
                 throw new ResourceNotFoundException("Link Expired");
             }
         }
