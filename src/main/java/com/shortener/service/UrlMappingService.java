@@ -4,6 +4,7 @@ import java.util.Date;
 import java.util.Optional;
 import java.util.concurrent.ThreadLocalRandom;
 
+import com.shortener.exception.ResourceAlreadyExistsException;
 import com.shortener.exception.ResourceNotFoundException;
 import com.shortener.model.UrlMapping;
 import com.shortener.repository.UrlRepository;
@@ -41,6 +42,26 @@ public class UrlMappingService {
         UrlMapping urlMapping = UrlMapping.builder().shortUrlKey(shortUrl).mainUrl(originalUrl).expiryTime(expiryTime).build();
         urlRepository.save(urlMapping);
         return BASE_URL + shortUrl;
+    }
+
+    public String shortenCustomUrl(String originalUrl, String customUrlKey, Date expiryTime) {
+        Optional<UrlMapping> customUrlMapping = Optional.ofNullable(urlRepository.findByShortUrlKey(customUrlKey));
+        if(customUrlMapping.isPresent()) {
+            throw new ResourceAlreadyExistsException("The custom key already exists ");
+        }
+
+
+        Optional<UrlMapping> existingMapping = Optional.ofNullable(urlRepository.findByMainUrl(originalUrl));
+        if (existingMapping.isPresent()) {
+            existingMapping.get().setExpiryTime(expiryTime);
+            existingMapping.get().setShortUrlKey(customUrlKey);
+            urlRepository.save(existingMapping.get());
+            return BASE_URL + existingMapping.get().getShortUrlKey();
+        }
+
+        UrlMapping urlMapping = UrlMapping.builder().shortUrlKey(customUrlKey).mainUrl(originalUrl).expiryTime(expiryTime).build();
+        urlRepository.save(urlMapping);
+        return BASE_URL + customUrlKey;
     }
 
     public String getOriginalUrl(String shortUrl) {

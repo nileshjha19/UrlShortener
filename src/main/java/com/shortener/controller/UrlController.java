@@ -3,6 +3,7 @@ package com.shortener.controller;
 import java.net.URI;
 import java.util.Date;
 
+import com.shortener.dto.CreateCustomUrlMappingRequest;
 import com.shortener.dto.CreateUrlMappingRequest;
 import com.shortener.dto.CustomErrorMessages;
 import com.shortener.dto.CustomErrorResponse;
@@ -49,11 +50,47 @@ public class UrlController {
          return new ResponseEntity<>(httpHeaders, HttpStatus.FOUND);
     }
 
+    @PostMapping("/shortener/custom")
+    public ResponseEntity<Object> createCustomUrlMapping(@RequestBody CreateCustomUrlMappingRequest createCustomUrlMappingRequest) {
+        String originalUrl = createCustomUrlMappingRequest.getLongUrl();
+        Date expiryTime = createCustomUrlMappingRequest.getExpiryTime();
+        String customUrl = createCustomUrlMappingRequest.getCustomUrl();
+
+        ResponseEntity<Object> responseResponseEntity = validateCustomRequest(createCustomUrlMappingRequest);
+        if(responseResponseEntity != null)
+            return responseResponseEntity;
+
+        String shortenedCustomUrl = urlMappingService.shortenCustomUrl(originalUrl, customUrl, expiryTime);
+        if(null != shortenedCustomUrl) {
+            return ResponseEntity.ok(UrlMapping.builder().shortUrlKey(shortenedCustomUrl).mainUrl(originalUrl).expiryTime(expiryTime).build());
+        }
+        return (ResponseEntity<Object>) ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR);
+
+    }
     private ResponseEntity<Object> validateRequest(CreateUrlMappingRequest createUrlMappingRequest) {
-        CustomErrorResponse customErrorResponse;
         String originalUrl = createUrlMappingRequest.getLongUrl();
         Date expiryTime = createUrlMappingRequest.getExpiryTime();
+        return getObjectResponseEntity(originalUrl, expiryTime);
+    }
 
+    private ResponseEntity<Object>validateCustomRequest(CreateCustomUrlMappingRequest createCustomUrlMappingRequest) {
+
+        CustomErrorResponse customErrorResponse;
+        String originalUrl = createCustomUrlMappingRequest.getLongUrl();
+        Date expiryTime = createCustomUrlMappingRequest.getExpiryTime();
+        String customUrl = createCustomUrlMappingRequest.getCustomUrl();
+
+        if(null == customUrl) {
+            customErrorResponse = new CustomErrorResponse(HttpStatus.BAD_REQUEST.value(), CustomErrorMessages.URL_NOT_PRESENT.toString());
+            return new ResponseEntity<>(customErrorResponse, HttpStatus.BAD_REQUEST);
+        }
+
+        return getObjectResponseEntity(originalUrl, expiryTime);
+
+    }
+
+    private ResponseEntity<Object> getObjectResponseEntity(String originalUrl, Date expiryTime) {
+        CustomErrorResponse customErrorResponse;
         if(null == originalUrl) {
             customErrorResponse = new CustomErrorResponse(HttpStatus.BAD_REQUEST.value(), CustomErrorMessages.URL_NOT_PRESENT.toString());
             return new ResponseEntity<>(customErrorResponse, HttpStatus.BAD_REQUEST);
@@ -64,7 +101,7 @@ public class UrlController {
             return new ResponseEntity<>(customErrorResponse, HttpStatus.BAD_REQUEST);
         }
 
-        if( expiryTime.before(new Date())) {
+        if(expiryTime.before(new Date())) {
             customErrorResponse = new CustomErrorResponse(HttpStatus.BAD_REQUEST.value(), CustomErrorMessages.EXPIRY_TIME_IN_PAST.toString());
             return new ResponseEntity<>(customErrorResponse, HttpStatus.BAD_REQUEST);
         }

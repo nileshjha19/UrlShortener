@@ -8,12 +8,13 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class CreateUrlMappingRequest {
+public class CreateCustomUrlMappingRequest {
 
     @NotNull
     private String longUrl;
 
     private Date expiryTime;
 
-
+    @NotNull
+    private String customUrl;
 }
