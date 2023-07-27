@@ -16,12 +16,18 @@ public class UrlMappingService {
 
     private UrlRepository urlRepository;
 
+    private UrlConfigurationsService urlConfigurationsService;
+
+
     @Autowired
-    public void URLShorteningService(UrlRepository urlRepository) {
+    public void UrlMappingService(UrlRepository urlRepository, UrlConfigurationsService urlConfigurationsService) {
         this.urlRepository = urlRepository;
+        this.urlConfigurationsService = urlConfigurationsService;
     }
     private final String BASE_URL = "https://tiney.com/";
-    private final int SHORT_URL_LENGTH = 6;
+
+    public static final String SHORT_URL_LENGTH = "SHORT_URL_LENGTH";
+
 
     public String shortenUrl(String originalUrl, Date expiryTime) {
         Optional<UrlMapping> existingMapping = Optional.ofNullable(urlRepository.findByMainUrl(originalUrl));
@@ -49,7 +55,6 @@ public class UrlMappingService {
         if(customUrlMapping.isPresent()) {
             throw new ResourceAlreadyExistsException("The custom key already exists ");
         }
-
 
         Optional<UrlMapping> existingMapping = Optional.ofNullable(urlRepository.findByMainUrl(originalUrl));
         if (existingMapping.isPresent()) {
@@ -80,8 +85,9 @@ public class UrlMappingService {
     private String generateShortUrl() {
         String characters = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
         StringBuilder shortUrlBuilder = new StringBuilder();
+        int shortUrlLength = Integer.parseInt(urlConfigurationsService.findByConfigKey(SHORT_URL_LENGTH));
 
-        for (int i = 0; i < SHORT_URL_LENGTH; i++) {
+        for (int i = 0; i < shortUrlLength; i++) {
             int randomIndex = ThreadLocalRandom.current().nextInt(characters.length());
             shortUrlBuilder.append(characters.charAt(randomIndex));
         }
