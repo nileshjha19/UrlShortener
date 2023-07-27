@@ -38,6 +38,12 @@ public class UrlMapping {
     @Column(name = "expiry_time")
     private Date expiryTime;
 
+    public UrlMapping(String shortUrlKey, String mainUrl, Date futureExpiry) {
+        this.shortUrlKey = shortUrlKey;
+        this.mainUrl = mainUrl;
+        this.expiryTime = futureExpiry;
+    }
+
     public String getMainUrl() {
         return mainUrl;
     }
