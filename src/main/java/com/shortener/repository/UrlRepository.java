@@ -1,10 +1,6 @@
-package com.employee.springbootbackend.repository;
+package com.shortener.repository;
 
-import java.util.Date;
-
-import com.employee.springbootbackend.model.Employee;
-import com.employee.springbootbackend.model.UrlMapping;
-import com.employee.springbootbackend.service.UrlMappingService;
+import com.shortener.model.UrlMapping;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

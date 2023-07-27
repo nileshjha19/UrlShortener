@@ -1,13 +1,12 @@
-package com.employee.springbootbackend.service;
+package com.shortener.service;
 
-import javax.persistence.EntityNotFoundException;
 import java.util.Date;
 import java.util.Optional;
 import java.util.concurrent.ThreadLocalRandom;
 
-import com.employee.springbootbackend.exception.ResourceNotFoundException;
-import com.employee.springbootbackend.model.UrlMapping;
-import com.employee.springbootbackend.repository.UrlRepository;
+import com.shortener.exception.ResourceNotFoundException;
+import com.shortener.model.UrlMapping;
+import com.shortener.repository.UrlRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

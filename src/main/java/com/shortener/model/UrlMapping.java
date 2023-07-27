@@ -1,4 +1,4 @@
-package com.employee.springbootbackend.model;
+package com.shortener.model;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;

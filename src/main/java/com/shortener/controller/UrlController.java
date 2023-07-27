@@ -1,11 +1,11 @@
-package com.employee.springbootbackend.controller;
+package com.shortener.controller;
 
 import java.net.URI;
 import java.util.Date;
 
-import com.employee.springbootbackend.dto.CreateUrlMappingRequest;
-import com.employee.springbootbackend.model.UrlMapping;
-import com.employee.springbootbackend.service.UrlMappingService;
+import com.shortener.dto.CreateUrlMappingRequest;
+import com.shortener.model.UrlMapping;
+import com.shortener.service.UrlMappingService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;

@@ -1,4 +1,4 @@
-package com.employee.springbootbackend.dto;
+package com.shortener.dto;
 
 import java.util.Date;
 
